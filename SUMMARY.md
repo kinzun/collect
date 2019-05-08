@@ -1,6 +1,5 @@
 
 ### 基础
-* [爬虫](README.md)
 ### 数据解析
 
 * [Python解析](02parsin/Python%20爬虫%20三种数据解析方式.md)
