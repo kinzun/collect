@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
 [![paradin](/Users/toorl/Documents/the_picture/bpython1.png)](https://rorschachchan.github.io/images/bpython1.png)
 
-[脚本执行效果](https://rorschachchan.github.io/images/bpython1.png)
+
 
 注意！下载文件所在的bucket要设置成“公有读”而不能是“私有”。
 
@@ -70,7 +70,17 @@ if __name__ == '__main__':
    ```
 
 2. `bpython`，这是一个好东西，可以在linux环境下实现类似`pycharm`的提示功能,搭配tab键补全。安装方法就是`pip install bpython`，然后启动python的时候直接bpython即可。效果如图：
-   [![paradin](/Users/toorl/Documents/the_picture/bpython.gif)](https://rorschachchan.github.io/images/bpython.gif)
+   [![paradin](bpython.gif)]()
+
+
+
+
+
+```
+
+```
+
+
 
 ## 参考资料
 
