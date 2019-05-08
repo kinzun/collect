@@ -7,7 +7,7 @@
 
 * [requests](requests/requsts.md)
     * [selenium和PhantomJS](requests/selenium和PhantomJS.md)
-    * [tqdm 进度条](02parsin/使用tqdm制作下载进度条.md)
+    * [tqdm 进度条](requests/使用tqdm制作下载进度条.md)
 
 ### 框架
 * [scrapy 框架]()

@@ -1,10 +1,10 @@
 ## **简介**
 
-selenium最初是一个自动化测试工具,而爬虫中使用它主要是为了解决requests无法直接执行JavaScript代码的问题 selenium本质是通过驱动浏览器，完全模拟浏览器的操作，比如跳转、输入、点击、下拉等，来拿到网页渲染之后的结果，可支持多种浏览器
+selenium 最初是一个自动化测试工具,而爬虫中使用它主要是为了解决requests 无法直接执行 JavaScript 代码的问题 selenium本质是通过驱动浏览器，完全模拟浏览器的操作，比如跳转、输入、点击、下拉等，来拿到网页渲染之后的结果，可支持多种浏览器
 
 ## **环境安装**
 
-- 下载安装selenium：pip install selenium
+- 下载安装 selenium：`pip install selenium`
 - 下载浏览器驱动程序：
   - http://chromedriver.storage.googleapis.com/index.html
 - 查看驱动和浏览器版本的映射关系：
@@ -98,15 +98,15 @@ find_element_by_css_selector()
 
 注意
 
-1、find_element_by_xxx找的是第一个符合条件的标签，find_elements_by_xxx找的是所有符合条件的标签。
+1、find_element_by_xxx 找的是第一个符合条件的标签，find_elements_by_xxx找的是所有符合条件的标签。
 
 2、根据ID、CSS选择器和XPath获取，它们返回的结果完全一致。
 
-3、另外，Selenium还提供了通用方法`find_element()`，它需要传入两个参数：查找方式`By`和值。实际上，它就是`find_element_by_id()`这种方法的通用函数版本，比如`find_element_by_id(id)`就等价于`find_element(By.ID, id)`，二者得到的结果完全一致。
+3、另外，Selenium还提供了通用方法 `find_element()`，它需要传入两个参数：查找方式 `By` 和值。实际上，它就是 `find_element_by_id()`这种方法的通用函数版本，比如 `find_element_by_id(id)`就等价于`find_element(By.ID, id)`，二者得到的结果完全一致。
 
 ## **节点交互**
 
-Selenium可以驱动浏览器来执行一些操作，也就是说可以让浏览器模拟执行一些动作。比较常见的用法有：输入文字时用`send_keys()`方法，清空文字时用`clear()`方法，点击按钮时用`click()`方法。示例如下：
+Selenium 可以驱动浏览器来执行一些操作，也就是说可以让浏览器模拟执行一些动作。比较常见的用法有：输入文字时用`send_keys()`方法，清空文字时用`clear()`方法，点击按钮时用`click()`方法。示例如下：
 
 ```python
 from selenium import webdriver
