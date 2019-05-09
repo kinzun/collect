@@ -91,7 +91,7 @@ Scrapy中的数据流由执行引擎控制，其过程如下:
 
 
 
-post请求发送
+递归解析请求发送
 
 
 
@@ -100,8 +100,6 @@ post请求发送
         for u in self.start_urls:
            yield scrapy.Request(url=u,callback=self.parse)
 ```
-
-
 
 
 
