@@ -2,22 +2,6 @@
 
 
 
-- 递归爬取解析多页页面数据
-- scrapy核心组件工作流程
-- scrapy的post请求发送
-
-1.递归爬取解析多页页面数据
-
-\- 需求：将糗事百科所有页码的作者和段子内容数据进行爬取切持久化存储
-
-\- 需求分析：每一个页面对应一个url，则scrapy工程需要对每一个页码对应的url依次发起请求，然后通过对应的解析方法进行作者和段子内容的解析。
-
-实现方案：
-
-​    1.将每一个页码对应的url存放到爬虫文件的起始url列表（start_urls）中。（不推荐）
-
-​    2.使用Request方法手动发起请求。（推荐）
-
 代码展示：
 
 ```python
@@ -65,22 +49,51 @@ class QiushiSpider(scrapy.Spider):
 
 
 
-- **引擎(Scrapy)**
-  用来处理整个系统的数据流处理, 触发事务(框架核心)
-- **调度器(Scheduler)**
-  用来接受引擎发过来的请求, 压入队列中, 并在引擎再次请求的时候返回. 可以想像成一个URL（抓取网页的网址或者说是链接）的优先队列, 由它来决定下一个要抓取的网址是什么, 同时去除重复的网址
-- **下载器(Downloader)**
-  用于下载网页内容, 并将网页内容返回给蜘蛛(Scrapy下载器是建立在twisted这个高效的异步模型上的)
-- **爬虫(Spiders)**
-  爬虫是主要干活的, 用于从特定的网页中提取自己需要的信息, 即所谓的实体(Item)。用户也可以从中提取出链接,让Scrapy继续抓取下一个页面
-- **项目管道(Pipeline)**
-  负责处理爬虫从网页中抽取的实体，主要的功能是持久化实体、验证实体的有效性、清除不需要的信息。当页面被爬虫解析后，将被发送到项目管道，并经过几个特定的次序处理数据。
+![](../../the_picture/scrapy.jpg)
 
-3.post请求发送
 
-\- 问题：在之前代码中，我们从来没有手动的对start_urls列表中存储的起始url进行过请求的发送，但是起始url的确是进行了请求的发送，那这是如何实现的呢？
 
-\- 解答：其实是因为爬虫文件中的爬虫类继承到了Spider父类中的start_requests（self）这个方法，该方法就可以对start_urls列表中的url发起请求：
+- ### Scrapy Engine
+  
+  引擎负责控制数据流在系统中所有组件中流动，并在相应动作发生时触发事件。 详细内容查看下面的数据流( Data Flow )部分。
+  
+  ### 调度器(Scheduler)
+  
+  调度器从引擎接受 request 并将他们入队，以便之后引擎请求他们时提供给引擎。
+  
+  ### 下载器(Downloader)
+  
+  下载器负责获取页面数据并提供给引擎，而后提供给 spider。
+  
+  ### Spiders
+  
+  Spider 是 Scrapy 用户编写用于分析 response 并提取item(即获取到的item)或额外跟进的URL的类。 每个 spider 负责处理一个特定(或一些)网站。 更多内容请看 [Spiders](https://scrapy-chs.readthedocs.io/zh_CN/0.24/topics/spiders.html#topics-spiders) 。
+  
+  ### Item Pipeline
+  
+  Item Pipeline 负责处理被spider提取出来的 item。典型的处理有清理、 验证及持久化(例如存取到数据库中)。 更多内容查看 [Item Pipeline](https://scrapy-chs.readthedocs.io/zh_CN/0.24/topics/item-pipeline.html#topics-item-pipeline) 。
+
+
+
+## 数据流(Data flow)
+
+Scrapy中的数据流由执行引擎控制，其过程如下:
+
+1. 引擎打开一个网站( open a domain )，找到处理该网站的 Spider 并向该spider 请求第一个要爬取的URL(s)。
+2. 引擎从Spider中获取到第一个要爬取的URL并在调度器( Scheduler )以Request 调度。
+3. 引擎向调度器请求下一个要爬取的 URL。
+4. 调度器返回下一个要爬取的URL给引擎，引擎将URL通过下载中间件(请求( request )方向)转发给下载器( Downloader )。
+5. 一旦页面下载完毕，下载器生成一个该页面的 Response，并将其通过下载中间件(返回( response )方向)发送给引擎。
+6. 引擎从下载器中接收到 Response 并通过Spider中间件(输入方向)发送给Spider 处理。
+7. Spider 处理 Response 并返回爬取到的 Item 及(跟进的)新的 Request 给引擎。
+8. 引擎将( Spider 返回的)爬取到的 Item 给 Item Pipeline，将( Spider 返回的) Request 给调度器。
+9. (从第二步)重复直到调度器中没有更多地 request，引擎关闭该网站。
+
+
+
+post请求发送
+
+
 
 ```python
   def start_requests(self):
@@ -90,11 +103,11 @@ class QiushiSpider(scrapy.Spider):
 
 
 
-![点击并拖拽以移动](data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==)
 
-【注意】该方法默认的实现，是对起始的url发起get请求，如果想发起post请求，则需要子类重写该方法。
 
-　　-方法： 重写start_requests方法，让其发起post请求：
+## Post 
+
+方法： 重写start_requests方法，让其发起post请求：
 
 ```python
 def start_requests(self):

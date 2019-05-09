@@ -1,0 +1,57 @@
+import requests
+import random
+
+from bs4 import BeautifulSoup
+from lxml import etree
+from tqdm import tqdm
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36"}
+
+
+def rq_url(URL):
+    page_html = requests.get(url=URL, headers=HEADERS, )
+    page_html.encoding = 'utf-8'
+
+    return page_html
+
+
+def full_info_func():
+    re = rq_url(URL="http://sc.chinaz.com/jianli/free.html")
+    html = etree.HTML(re.text)
+    result = html.xpath('//*[@id="container"]')[0]
+    full_url = []
+    for i in result:
+        resume_url = i.xpath('./p/a')[0].get("href")
+        resume_info = i.xpath('./p/a')[0].text
+        full = {"url": resume_url, "title": resume_info}
+        full_url.append(full)
+
+
+def download(url):
+    re = rq_url(url)
+    html = etree.HTML(re.text)
+    result = html.xpath('//*[@id="down"]/div[2]/ul/li/a')
+
+    download_link = random.choice(result).get('href')
+    title = html.xpath('//abs/div[7]/div[2]/div[2]/div[1]/div[1]')
+    print(title)
+    file_name = download_link.split('/')[-1]  # 截取整个url最后一段即文件名
+    print(file_name)
+
+    resp = requests.get(download_link, stream=True, headers=HEADERS)
+    # stream=True的作用是仅让响应头被下载，连接保持打开状态，
+    # print(resp.headers)
+    content_size = int(resp.headers['Content-Length']) / 1024  # 确定整个安装包的大小
+
+    with open("test.rar", 'wb') as fd:
+        # for chunk in r.iter_content(chunk_size=1024):
+        #     fd.write(chunk)
+        for data in tqdm(iterable=resp.iter_content(1024), total=content_size, unit='k', desc=file_name):
+            fd.write(data)
+        print(file_name + "已经下载完毕！")
+
+
+url = "http://sc.chinaz.com/jianli/190501265061.htm"
+
+download(url)
