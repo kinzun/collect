@@ -1,7 +1,12 @@
 
 ### 基础
-### 数据解析
 
+* [](02parsin/Python%20爬虫%20三种数据解析方式.md)
+* [站长素材简历](02parsin/test.md)
+
+
+
+### 数据解析
 * Python解析
     * [Python解析](02parsin/Python%20爬虫%20三种数据解析方式.md)
     * [站长素材简历](02parsin/test.md)
